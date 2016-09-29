@@ -1,0 +1,56 @@
+---
+title: "BayesianInference_1"
+author: "glg"
+date: "September 26, 2016"
+output: html_document
+---
+
+### RU 486 data 
+4 pregnancies out of 20 from a morning after pill treatment( 16 pregnancies from the control)
+if treatment and control are equally effective - then probability that the pregnancy comes from the treatment group is p = 0.5
+
+### 9 models - any between 0 and 1
+
+chances the pregnancy comes from the treatment group is 
+10%, 20%... 90%
+if p = 20% - then 1 to 4 in the treatment group.
+likelihood
+calculate P(data | model) for each model considered
+P(k = 4|n=20,p)     p is 10% to 90%
+
+```{r}
+
+p <- seq(from = 0.1, to = 0.9, by =0.1)
+prior <- c(rep(0.06, 4), 0.52, rep(0.06, 4))
+likelihood <- dbinom(4, size = 20, prob = p)
+plot(likelihood)
+plot(prior)
+
+numerator <- prior * likelihood
+denominator <- sum(numerator)
+posterior <- numerator / denominator
+sum(posterior)  #1  - hence checks out.
+plot(posterior)
+
+```
+
+```{r}
+#add more data - this time 3 out of 20
+newLikelihood <- dbinom(30,size=200, prob=p)
+newPrior <- posterior
+newPosterior <- newPrior * newLikelihood / sum(newPrior * newLikelihood)
+barplot(newPosterior)
+
+
+par(mfrow=c(1,2))
+barplot(posterior, main="First round")
+barplot(newPosterior, main = "second round")
+```
+
+```{r}
+
+
+```
+
+
+
